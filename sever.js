@@ -3,6 +3,10 @@ const propertiesReader = require("properties-reader")
 const path = require('node:path')
 const cors = require('cors');
 const app = express()
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb")
+const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 })
+const db = client.db(dbName)
+
 
 //get uri from db.properties
 const propertiesPath = path.resolve(__dirname, "conf/db.properties")
@@ -16,9 +20,6 @@ const dbName = properties.get("db.dbName")
 const dbUrl = properties.get("db.host")
 const dbParams = properties.get("db.options")
 const uri = dbPprefix + dbUsername + ":" + dbPwd + dbUrl + dbParams
-const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb")
-const client = new MongoClient(uri, { serverApi: ServerApiVersion.v1 })
-const db = client.db(dbName)
 
 
 app.use(cors())
