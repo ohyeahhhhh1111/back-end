@@ -25,6 +25,11 @@ const uri = dbPprefix + dbUsername + ":" + dbPwd + dbUrl + dbParams
 app.use(cors())
 app.use(express.json())
 
+app.use((req, res, next)=>{
+    console.log(`${req.method} request for '${req.url}'`)
+    next()
+})
+
 
 app.param('collectionName', function(req, res, next, collectionName) {
     console.log(collectionName)
