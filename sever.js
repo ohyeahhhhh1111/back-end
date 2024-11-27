@@ -5,7 +5,7 @@ const cors = require('cors');
 const app = express()
 
 //get uri from db.properties
-const propertiesPath = path.resolve(__dirname, "db.properties")
+const propertiesPath = path.resolve(__dirname, "conf/db.properties")
 const properties = propertiesReader(propertiesPath)
 const dbPprefix = properties.get("db.prefix")
 //URL-Encoding of User and PWD
@@ -75,6 +75,29 @@ app.post('/collections/:collectionName', function(req, res, next) {
     res.send(results)
     })
 })
+
+// 更新產品的 API
+app.put('/collections/:collectionName/:id', async (req, res) => {
+    const productId = req.params.id;
+    const updatedData = req.body;
+
+    try {
+        const result = await db.collection('Products').updateOne(
+            { _id: new ObjectId(productId) }, // 根據 ID 查詢
+            { $set: updatedData }             // 使用 $set 更新內容
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).send({ message: 'Product not found' });
+        }
+
+        res.status(200).send({ message: 'Product updated successfully' });
+        console.log('Products list has been PUT!')
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Failed to update product' });
+    }
+});
 
 
 app.listen(3000, () => console.log('Server is running on http://localhost:3000'))
