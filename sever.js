@@ -41,6 +41,8 @@ app.param('collectionName', function(req, res, next, collectionName) {
 app.get('/collections/:collectionName', function(req, res, next) {
     req.collection.find({}).toArray(function(err, results) {
         if (err) {
+            res.status(404).send(err)
+            console.log("404 Not Found")
             return next(err)
         }
         console.log("GET")
@@ -70,6 +72,8 @@ app.post('/collections/:collectionName', function(req, res, next) {
     console.log("Order POST!")
     req.collection.insertOne(req.body, function(err, results) {
     if (err) {
+        console.log(err)
+        res.status(404)
         return next(err)
     }
     res.send(results)
